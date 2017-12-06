@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-    <service_name>cmsium_auth</service_name>
+    <service_name>cmsium_address</service_name>
     <methods>
         <method>
             <!--Basic API calls-->
