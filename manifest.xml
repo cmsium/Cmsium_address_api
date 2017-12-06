@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+    <service_name>cmsium_auth</service_name>
+    <methods>
+        <method>
+            <!--Basic API calls-->
+            <resource>/</resource>
+            <auth/>
+            <method>
+                <resource>search</resource>
+                <auth/>
+            </method>
+        </method>
+    </methods>
+</manifest>
