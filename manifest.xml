@@ -10,6 +10,14 @@
                 <resource>search</resource>
                 <auth/>
             </method>
+            <method>
+                <resource>read</resource>
+                <auth>staff</auth>
+            </method>
+            <method>
+                <resource>save</resource>
+                <auth>staff</auth>
+            </method>
         </method>
     </methods>
 </manifest>
