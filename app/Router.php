@@ -3,6 +3,7 @@ class Router {
 
     private static $instance;
     private $routes;
+    private $uri;
 
     public static function getInstance(){
         if (!(self::$instance instanceof self)) {
@@ -33,15 +34,14 @@ class Router {
      */
     public function executeAction($uri) {
         $parsed_uri = parse_url($uri);
+        $this->uri = $parsed_uri['path'];
         if (array_key_exists($parsed_uri['path'], $this->routes)) {
             $action = $this->routes[$parsed_uri['path']];
             $method = $action[0];
-//            if (isset($action['auth'])) {
-//                if (!$this->checkAuth()) {
-//                    echo AUTH_ERROR['text'];
-//                    exit;
-//                }
-//            }
+            if (!$this->checkAuth()) {
+                echo AUTH_ERROR['text'];
+                exit;
+            }
         } else {
             readfile(ROOTDIR.'/app/views/404.html');
             exit;
@@ -50,38 +50,38 @@ class Router {
         echo $controller->$method();
     }
 
-//    private function checkAuth($roles) {
-//        if (Cookie::checkToken()) {
-//            $token_raw = $_COOKIE['token'];
-//            $auth = UserAuth::getInstance();
-//            if (!$user_id = $auth->check($token_raw)) {
-//                return false;
-//            }
-//            if ($roles != [0]) {
-//                if (!$auth->checkSelfRoles($roles, $user_id)) {
-//                    return false;
-//                }
-//            }
-//            Controller::$user_id = $user_id;
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
     private function checkAuth() {
         if (!isset($_COOKIE['token'])) {
             return false;
         } else {
             $auth = Config::get('auth_domain');
-            $request = new Request("http://$auth/token/check");
+            $request = new Request("$auth/token/check");
             $authcheck = $request->sendRequestJSON('POST',
                 'Content-type: application/x-www-form-urlencoded',
                 http_build_query(['token'=>$_COOKIE['token']]));
-            switch ($authcheck['is_valid']){
-                case true: Controller::$user_id = Cookie::getUserId(); return true; break;
-                case false: return false; break;
+            if ($authcheck['is_valid'] == true) {
+                if (!$this->checkPermissions()) {
+                    return false;
+                }
+                Controller::$user_id = Cookie::getUserId();
+                return true;
+            } else {
+                return false;
             }
+        }
+    }
+
+    private function checkPermissions() {
+        $auth = Config::get('auth_domain');
+        $request = new Request("$auth/permissions/check");
+        $http_query = http_build_query(['token'=>$_COOKIE['token'], 'action' => $this->uri, 'service_name' => 'cmsium_address']);
+        $authcheck = $request->sendRequestJSON('POST',
+            'Content-type: application/x-www-form-urlencoded',
+            $http_query);
+        if ($authcheck['status'] === 'ok') {
+            return true;
+        } else {
+            return false;
         }
     }
 

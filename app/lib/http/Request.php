@@ -14,7 +14,7 @@ class Request {
             $options['http']['content'] = $content;
         }
         $context = stream_context_create($options);
-        $result = file_get_contents("$URL", false, $context);
+        $result = file_get_contents("http://$URL", false, $context);
         return json_decode($result,true);
     }
 

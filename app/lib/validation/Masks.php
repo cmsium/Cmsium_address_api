@@ -384,6 +384,14 @@ class Masks{
             'table_name' => ['func' => 'AlphaNumeric',
                 'props' => ['min' => 1, 'max' => 64],
                 'required' => false],
+        ],
+
+        'readAddress' => [
+            'country_iso' => ['func'=>'StrNumbers','props'=>['min' => 1, 'max' => 64],'required'=>true],
+            'object_id' => ['func'=>'StrNumbers','props'=>['min' => 1, 'max' => 64],'required'=>true],
+            'concat' => ['func' => 'AlphaNumeric',
+                'props' => ['min' => 1, 'max' => 32],
+                'required' => true],
         ]
 
     ];

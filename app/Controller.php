@@ -19,8 +19,9 @@ class Controller {
      * @return string JSON encoded result
      */
     public function searchAddress() {
-//        Engine::OutHeader('respondJSON',['filename' => "address_query.json"]);
         header('Content-type: application/json;charset=utf-8');
+        header('Access-Control-Allow-Origin: *');
+//        var_dump(self::convert(memory_get_usage(true)));
         $validator = Validator::getInstance();
         $data = $validator->ValidateAllByMask($_GET,'addressQuery');
         if (!$data) {
@@ -35,6 +36,31 @@ class Controller {
         } else {
             return json_encode([]);
         }
+    }
+
+    public function saveAddress() {
+        // TODO: Validation?
+        header('Content-type: application/json;charset=utf-8');
+        $data = $_POST;
+        $address_obj = new Address($data);
+        if ($last_item_id = $address_obj->save()) {
+            return json_encode(['status' => 'ok', 'last_id' => $last_item_id],JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(['status' => 'error', 'message' => DATA_FORMAT_ERROR['text']],JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    public function readAddress() {
+        header('Content-type: application/json;charset=utf-8');
+        $validator = Validator::getInstance();
+        $data = $validator->ValidateAllByMask($_GET,'readAddress');
+        if (!$data) {
+            return json_encode(['status' => 'error', 'message' => DATA_FORMAT_ERROR['text']],JSON_UNESCAPED_UNICODE);
+        }
+        $address_obj = new Address();
+        $concat = $data['concat'] === 'true' ? true : false;
+        $address_item = $address_obj->read((int)$data['country_iso'], (int)$data['object_id'], $concat);
+        return json_encode($address_item,JSON_UNESCAPED_UNICODE);
     }
 
 }
