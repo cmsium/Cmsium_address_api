@@ -4,6 +4,6 @@ $routes = [
     // Basic API calls
     '/' => ['searchAddress'],
     '/search' => ['searchAddress'],
-    '/save' => ['saveAddress'],
-    '/read' => ['readAddress'],
+    '/save' => ['saveAddress', 'auth'],
+    '/read' => ['readAddress', 'auth'],
 ];

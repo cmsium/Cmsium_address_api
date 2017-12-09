@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require 'config/init_libs.php';
 require REQUIRES;
 

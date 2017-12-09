@@ -38,9 +38,11 @@ class Router {
         if (array_key_exists($parsed_uri['path'], $this->routes)) {
             $action = $this->routes[$parsed_uri['path']];
             $method = $action[0];
-            if (!$this->checkAuth()) {
-                echo AUTH_ERROR['text'];
-                exit;
+            if (isset($action[1]) && $action[1] === 'auth') {
+                if (!$this->checkAuth()) {
+                    echo AUTH_ERROR['text'];
+                    exit;
+                }
             }
         } else {
             readfile(ROOTDIR.'/app/views/404.html');

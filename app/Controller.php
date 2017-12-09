@@ -20,7 +20,6 @@ class Controller {
      */
     public function searchAddress() {
         header('Content-type: application/json;charset=utf-8');
-        header('Access-Control-Allow-Origin: *');
 //        var_dump(self::convert(memory_get_usage(true)));
         $validator = Validator::getInstance();
         $data = $validator->ValidateAllByMask($_GET,'addressQuery');
