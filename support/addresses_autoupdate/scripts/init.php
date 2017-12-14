@@ -1,10 +1,7 @@
 <?php
 // Get all dependencies
 require_once dirname(__DIR__).'/../../config/init_libs.php';
-foreach (glob(ROOTDIR.'/app/modules/*/interfaces/*.php') as $require_path) {
-    require_once $require_path;
-}
-foreach (glob(ROOTDIR.'/app/modules/*/classes/*.php') as $require_path) {
+foreach (glob(ROOTDIR.'/app/lib/*.php') as $require_path) {
     require_once $require_path;
 }
 foreach (glob(ROOTDIR.'/support/addresses_autoupdate/classes/*.php') as $require_path) {

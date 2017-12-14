@@ -58,7 +58,7 @@ class AutoUpdater {
             // Decide which class to call
             switch ($name) {
                 case "RU":
-                    KLADRReader::update();
+                    FIASReader::update();
                     break;
                 case "UA": break;
             }
@@ -107,6 +107,14 @@ class AutoUpdater {
                 $command = "7za x -o$output_path $file_path";
                 echo `$command`;
                 self::chmodR($output_path, 0775);
+                break;
+            case 'rar':
+                $archive = RarArchive::open($file_path);
+                $entries = $archive->getEntries();
+                foreach ($entries as $entry) {
+                    $entry->extract($output_path);
+                }
+                $archive->close();
                 break;
             default:
                 return false;

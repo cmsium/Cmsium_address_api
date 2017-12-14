@@ -97,3 +97,12 @@ CREATE PROCEDURE getRowFromStreetsKLADRTemp(idRow INT(11))
   BEGIN
     SELECT * FROM kladr_street_temp WHERE id = idRow;
   END;
+
+CREATE PROCEDURE getRowFromFIASTemp(idRow INT(11))
+  BEGIN
+    SELECT * FROM fias_temp WHERE id = idRow;
+  END;
+CREATE PROCEDURE getNameFromFIASTempByCode(codeVal VARCHAR(255), idType INT(11))
+  BEGIN
+    SELECT name FROM fias_temp WHERE code = codeVal AND type_id = idType;
+  END;

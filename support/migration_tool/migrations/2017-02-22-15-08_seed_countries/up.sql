@@ -255,6 +255,7 @@ INSERT INTO address_types (name) VALUES('area');
 INSERT INTO address_types (name) VALUES('city');
 INSERT INTO address_types (name) VALUES('locality');
 INSERT INTO address_types (name) VALUES('district');
+INSERT INTO address_types (name) VALUES('planning structure');
 INSERT INTO address_types (name) VALUES('street');
 INSERT INTO address_types (name) VALUES('house');
 INSERT INTO address_types (name) VALUES('building');
