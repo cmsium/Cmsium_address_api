@@ -46,14 +46,17 @@ class Query {
             $type_ids[] = $type_id;
         }
         $conn = DBConnection::getInstance();
-        $query_str = "SELECT $table_name.id, $table_name.name, address_types.name AS type FROM $table_name
-                      LEFT JOIN address_types ON $table_name.type_id = address_types.id 
-                      WHERE $table_name.type_id IN (".implode(',',$type_ids).")";
+//        $query_str = "SELECT $table_name.id, $table_name.name, address_types.name AS type FROM $table_name
+//                      LEFT JOIN address_types ON $table_name.type_id = address_types.id
+//                      WHERE $table_name.type_id IN (".implode(',',$type_ids).")";
         if ($this->search_str) {
             $search_str = $this->search_str;
-            $query_str .= " AND $table_name.name LIKE '%$search_str%'";
+//            $query_str .= " AND $table_name.name LIKE '%$search_str%'";
+            $query_str = "CALL searchByTypeWithName('$table_name', '".implode(',',$type_ids)."','$search_str','$limit','$offset');";
+        } else {
+            $query_str = "CALL searchByTypeWithName('$table_name', '".implode(',',$type_ids)."','$limit','$offset');";
         }
-        $query_str .= " LIMIT $limit OFFSET $offset;";
+//        $query_str .= " LIMIT $limit OFFSET $offset;";
         $result = $conn->performQueryFetchAll($query_str);
         if ($this->full_chain === '1' && !empty($result)) {
             foreach ($result as &$item) {
@@ -85,10 +88,10 @@ class Query {
             return false;
         }
         $conn = DBConnection::getInstance();
-        $query_str = "SELECT $table_name.id, $table_name.name, address_types.name AS type FROM $table_name
-                      LEFT JOIN address_types ON $table_name.type_id = address_types.id 
-                      WHERE parent_id = {$object['id']}";
-        if ($this->child_type) {
+//        $query_str = "SELECT $table_name.id, $table_name.name, address_types.name AS type FROM $table_name
+//                      LEFT JOIN address_types ON $table_name.type_id = address_types.id
+//                      WHERE parent_id = {$object['id']}";
+        if ($this->child_type && $this->search_str) {
             $type = explode(',', $this->child_type);
             $types = $this->getTypes();
             $type_ids = [];
@@ -99,13 +102,27 @@ class Query {
                 }
                 $type_ids[] = $type_id;
             }
-            $query_str .= " AND $table_name.type_id IN (".implode(',',$type_ids).")";
-        }
-        if ($this->search_str) {
             $search_str = $this->search_str;
-            $query_str .= " AND $table_name.name LIKE '%$search_str%'";
+            $query_str = "CALL searchByParentBoth('$table_name','{$object['id']}','".implode(',',$type_ids)."','$search_str','$limit','$offset');";
+        } else if ($this->child_type) {
+            $type = explode(',', $this->child_type);
+            $types = $this->getTypes();
+            $type_ids = [];
+            foreach ($type as $key=>$value) {
+                $type_id = array_search($value, $types);
+                if (!$type_id) {
+                    return [];
+                }
+                $type_ids[] = $type_id;
+            }
+            $query_str = "CALL searchByParentWithChildType('$table_name','{$object['id']}','".implode(',',$type_ids)."','$limit','$offset');";
+        } else if ($this->search_str) {
+            $search_str = $this->search_str;
+            $query_str = "CALL searchByParentWithName('$table_name','{$object['id']}','$search_str','$limit','$offset');";
+        } else {
+            $query_str = "CALL searchByParent('$table_name','{$object['id']}','$limit','$offset');";
         }
-        $query_str .= " LIMIT $limit OFFSET $offset;";
+//        $query_str .= " LIMIT $limit OFFSET $offset;";
         $result = $conn->performQueryFetchAll($query_str);
         if ($this->full_chain === '1' && !empty($result)) {
             foreach ($result as &$item) {

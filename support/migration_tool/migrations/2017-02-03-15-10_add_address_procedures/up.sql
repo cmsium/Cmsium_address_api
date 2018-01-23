@@ -106,3 +106,53 @@ CREATE PROCEDURE getNameFromFIASTempByCode(codeVal VARCHAR(255), idType INT(11))
   BEGIN
     SELECT name FROM fias_temp WHERE code = codeVal AND type_id = idType;
   END;
+
+
+CREATE  PROCEDURE searchByTypeWithName(IN table_name VARCHAR(40), IN in_params VARCHAR(40), IN search_str VARCHAR(255), IN limit_str VARCHAR(32), IN offset_str VARCHAR(32))
+  BEGIN
+    SET @t1 =CONCAT('SELECT ',table_name,'.id, ',table_name,'.name, address_types.name AS type FROM ',table_name,' LEFT JOIN address_types ON ',table_name,'.type_id = address_types.id WHERE ',table_name,'.type_id IN (',in_params,') AND ',table_name,'.name LIKE "%',search_str,'%" LIMIT ',limit_str,' OFFSET ',offset_str);
+    PREPARE stmt3 FROM @t1;
+    EXECUTE stmt3;
+    DEALLOCATE PREPARE stmt3;
+  END;
+
+CREATE  PROCEDURE searchByType(IN table_name VARCHAR(40), IN in_params VARCHAR(40), IN limit_str VARCHAR(32), IN offset_str VARCHAR(32))
+  BEGIN
+    SET @t1 =CONCAT('SELECT ',table_name,'.id, ',table_name,'.name, address_types.name AS type FROM ',table_name,' LEFT JOIN address_types ON ',table_name,'.type_id = address_types.id WHERE ',table_name,'.type_id IN (',in_params,') LIMIT ',limit_str,' OFFSET ',offset_str);
+    PREPARE stmt3 FROM @t1;
+    EXECUTE stmt3;
+    DEALLOCATE PREPARE stmt3;
+  END;
+
+
+CREATE  PROCEDURE searchByParentBoth(IN table_name VARCHAR(40), IN parent_id VARCHAR(40), IN in_params VARCHAR(40), IN search_str VARCHAR(255), IN limit_str VARCHAR(32), IN offset_str VARCHAR(32))
+  BEGIN
+    SET @t1 =CONCAT('SELECT ',table_name,'.id, ',table_name,'.name, address_types.name AS type FROM ',table_name,'LEFT JOIN address_types ON ',table_name,'.type_id = address_types.id WHERE parent_id = ',parent_id,' AND ',table_name,'.type_id IN (',in_params,') AND ',table_name,'.name LIKE "%',search_str,'%" LIMIT ',limit_str,' OFFSET ',offset_str);
+    PREPARE stmt3 FROM @t1;
+    EXECUTE stmt3;
+    DEALLOCATE PREPARE stmt3;
+  END;
+
+CREATE  PROCEDURE searchByParentWithName(IN table_name VARCHAR(40), IN parent_id VARCHAR(40), IN search_str VARCHAR(255), IN limit_str VARCHAR(32), IN offset_str VARCHAR(32))
+  BEGIN
+    SET @t1 =CONCAT('SELECT ',table_name,'.id, ',table_name,'.name, address_types.name AS type FROM ',table_name,'LEFT JOIN address_types ON ',table_name,'.type_id = address_types.id WHERE parent_id = ',parent_id,' AND ',table_name,'.name LIKE "%',search_str,'%" LIMIT ',limit_str,' OFFSET ',offset_str);
+    PREPARE stmt3 FROM @t1;
+    EXECUTE stmt3;
+    DEALLOCATE PREPARE stmt3;
+  END;
+
+CREATE  PROCEDURE searchByParentWithChildType(IN table_name VARCHAR(40), IN parent_id VARCHAR(40), IN in_params VARCHAR(40), IN limit_str VARCHAR(32), IN offset_str VARCHAR(32))
+  BEGIN
+    SET @t1 =CONCAT('SELECT ',table_name,'.id, ',table_name,'.name, address_types.name AS type FROM ',table_name,'LEFT JOIN address_types ON ',table_name,'.type_id = address_types.id WHERE parent_id = ',parent_id,' AND ',table_name,'.type_id IN (',in_params,') LIMIT ',limit_str,' OFFSET ',offset_str);
+    PREPARE stmt3 FROM @t1;
+    EXECUTE stmt3;
+    DEALLOCATE PREPARE stmt3;
+  END;
+
+CREATE  PROCEDURE searchByParent(IN table_name VARCHAR(40), IN parent_id VARCHAR(40), IN limit_str VARCHAR(32), IN offset_str VARCHAR(32))
+  BEGIN
+    SET @t1 =CONCAT('SELECT ',table_name,'.id, ',table_name,'.name, address_types.name AS type FROM ',table_name,'LEFT JOIN address_types ON ',table_name,'.type_id = address_types.id WHERE parent_id = ',parent_id,' LIMIT ',limit_str,' OFFSET ',offset_str);
+    PREPARE stmt3 FROM @t1;
+    EXECUTE stmt3;
+    DEALLOCATE PREPARE stmt3;
+  END;

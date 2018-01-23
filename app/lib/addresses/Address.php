@@ -25,6 +25,7 @@ class Address {
         $table_name = $this->getCountryTableName($country_iso)['table_name'];
         $types = $this->getTypes();
         $last_item_id = -1;
+        // TODO: Transactions!
         foreach ($data as $type_name => $object_name) {
             $type_id = array_search($type_name, $types);
             if (!$type_id) {
