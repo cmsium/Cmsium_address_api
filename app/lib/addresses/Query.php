@@ -54,7 +54,7 @@ class Query {
 //            $query_str .= " AND $table_name.name LIKE '%$search_str%'";
             $query_str = "CALL searchByTypeWithName('$table_name', '".implode(',',$type_ids)."','$search_str','$limit','$offset');";
         } else {
-            $query_str = "CALL searchByTypeWithName('$table_name', '".implode(',',$type_ids)."','$limit','$offset');";
+            $query_str = "CALL searchByType('$table_name', '".implode(',',$type_ids)."','$limit','$offset');";
         }
 //        $query_str .= " LIMIT $limit OFFSET $offset;";
         $result = $conn->performQueryFetchAll($query_str);
