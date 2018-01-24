@@ -25,7 +25,7 @@ class Address {
         $table_name = $this->getCountryTableName($country_iso)['table_name'];
         $types = $this->getTypes();
         $last_item_id = -1;
-        // TODO: Transactions!
+        $conn->startTransaction();
         foreach ($data as $type_name => $object_name) {
             $type_id = array_search($type_name, $types);
             if (!$type_id) {
@@ -41,6 +41,7 @@ class Address {
                 $last_item_id = $result['id'];
             }
         }
+        $conn->commit();
         return $last_item_id;
     }
 

@@ -53,6 +53,7 @@ class Query {
             $search_str = $this->search_str;
 //            $query_str .= " AND $table_name.name LIKE '%$search_str%'";
             $query_str = "CALL searchByTypeWithName('$table_name', '".implode(',',$type_ids)."','$search_str','$limit','$offset');";
+            var_dump($query_str);
         } else {
             $query_str = "CALL searchByType('$table_name', '".implode(',',$type_ids)."','$limit','$offset');";
         }
