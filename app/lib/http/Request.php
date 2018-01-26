@@ -15,6 +15,9 @@ class Request {
         }
         $context = stream_context_create($options);
         $result = file_get_contents("http://$URL", false, $context);
+        if ($code = $this->getHeaderValue($http_response_header, 'App-Exception')) {
+            ErrorHandler::throwExceptionByCode($code);
+        }
         return json_decode($result,true);
     }
 
@@ -26,6 +29,9 @@ class Request {
         }
         $context = stream_context_create($options);
         $result = file_get_contents("$URL", false, $context);
+        if ($code = $this->getHeaderValue($http_response_header, 'App-Exception')) {
+            ErrorHandler::throwExceptionByCode($code);
+        }
         return $result;
     }
 

@@ -38,14 +38,13 @@ class Controller {
     }
 
     public function saveAddress() {
-        // TODO: Validation?
         header('Content-type: application/json;charset=utf-8');
         $data = $_POST;
         $address_obj = new Address($data);
         if ($last_item_id = $address_obj->save()) {
-            return json_encode(['status' => 'ok', 'last_id' => $last_item_id],JSON_UNESCAPED_UNICODE);
+            return json_encode(['last_id' => $last_item_id],JSON_UNESCAPED_UNICODE);
         } else {
-            return json_encode(['status' => 'error', 'message' => DATA_FORMAT_ERROR['text']],JSON_UNESCAPED_UNICODE);
+            ErrorHandler::throwException(DATA_FORMAT_ERROR);
         }
     }
 
@@ -54,7 +53,7 @@ class Controller {
         $validator = Validator::getInstance();
         $data = $validator->ValidateAllByMask($_GET,'readAddress');
         if (!$data) {
-            return json_encode(['status' => 'error', 'message' => DATA_FORMAT_ERROR['text']],JSON_UNESCAPED_UNICODE);
+            ErrorHandler::throwException(DATA_FORMAT_ERROR);
         }
         $address_obj = new Address();
         $concat = $data['concat'] === 'true' ? true : false;
