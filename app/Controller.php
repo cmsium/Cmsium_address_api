@@ -44,7 +44,7 @@ class Controller {
         if ($last_item_id = $address_obj->save()) {
             return json_encode(['last_id' => $last_item_id],JSON_UNESCAPED_UNICODE);
         } else {
-            ErrorHandler::throwException(DATA_FORMAT_ERROR);
+            ErrorHandler::renderError(DATA_FORMAT_ERROR);
         }
     }
 
@@ -53,7 +53,7 @@ class Controller {
         $validator = Validator::getInstance();
         $data = $validator->ValidateAllByMask($_GET,'readAddress');
         if (!$data) {
-            ErrorHandler::throwException(DATA_FORMAT_ERROR);
+            ErrorHandler::renderError(DATA_FORMAT_ERROR);
         }
         $address_obj = new Address();
         $concat = $data['concat'] === 'true' ? true : false;
