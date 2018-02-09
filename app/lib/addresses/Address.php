@@ -60,7 +60,8 @@ class Address {
         $last_item_id = $object_id;
         $result_table = [];
         while ($last_item_id !== '-1') {
-            $query = "SELECT * FROM $table_name WHERE id = $last_item_id";
+//            $query = "SELECT * FROM $table_name WHERE id = $last_item_id";
+            $query = "CALL getAddressRow('$table_name','$last_item_id');";
             $result_row = $conn->performQueryFetch($query);
             $last_item_id = $result_row['parent_id'];
             $result_table[] = $result_row;
