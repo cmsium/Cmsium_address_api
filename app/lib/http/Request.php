@@ -47,4 +47,14 @@ class Request {
         return json_decode(curl_exec($curl),true);
     }
 
+    private function getHeaderValue($headers_array, $header) {
+        foreach ($headers_array as $value) {
+            $parsed_array = explode(':', $value, 2);
+            if ($parsed_array[0] === $header) {
+                return trim($parsed_array[1]);
+            }
+        }
+        return false;
+    }
+
 }
